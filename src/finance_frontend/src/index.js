@@ -1,9 +1,7 @@
 import { finance_backend } from "../../declarations/finance_backend"
 
 window.addEventListener("load", async () => {
-	const currentAmount = await finance_backend.checkBalance()
-	document.getElementById("value").textContent =
-		Math.round(currentAmount * 100) / 100
+	update()
 })
 
 document.querySelector("form").addEventListener("submit", async (e) => {
@@ -19,16 +17,21 @@ document.querySelector("form").addEventListener("submit", async (e) => {
 	// console.log("submitted")
 	if (document.getElementById("input-amount").value.length != 0) {
 		await finance_backend.topUp(inputAmount)
-	} else if (document.getElementById("withdrawal-amount").value.length != 0) {
+	}
+	if (document.getElementById("withdrawal-amount").value.length != 0) {
 		await finance_backend.withdraw(outputAmount)
 	}
 
-	const currentAmount = await finance_backend.checkBalance()
-	document.getElementById("value").textContent =
-		Math.round(currentAmount * 100) / 100
+	update()
 
 	document.getElementById("input-amount").value = ""
 	document.getElementById("withdrawal-amount").value = ""
 
 	btn.removeAttribute("disabled")
 })
+
+async function update() {
+	const currentAmount = await finance_backend.checkBalance()
+	document.getElementById("value").textContent =
+		Math.round(currentAmount * 100) / 100
+}
